@@ -14,35 +14,47 @@
 	<script type="text/javascript" src="transcriber2.js"></script>
 	<style>
 	  .nisbutton {
-	  width: 33%;
+		width: 33%;
 	  }
 	  #options .nisbutton {
-	  overflow: hidden;
-	  height: 20%;
-	  width: 100%;
-	  white-space: no-wrap;
+		overflow: hidden;
+		width: 100%;
+		white-space: no-wrap;
 	  }
 	  #output {
-	  height: 40%;
-	  overflow-y: auto;
+		height: 40%;
+		overflow-y: auto;
+		margin-left: 10px;
 	  }
 	  #options {
-	  height: 165px;
+		width: 93%;
+	  }
+	  #welcome a {
+		color: #888;
+	  }
+	  #custom-indent {
+		width: 3em;
 	  }
 	</style>
   </head>
   <body class="nis">
-	<input type="text" name="playername" value="Player Name" id="playername">
-	<input type="number" value="1" min="0" max="20" id="custom-indent" style="width:3em;" disabled>
+	<div id="welcome">
+		<p>This app reads dialogue with npcs and outputs the dialogue tree in a format that is used for the RuneScape Wiki. For more information about that format, see the <a href="https://runescape.wiki/w/RS:TRANSCRIPT">transcript style guide</a> on the Wiki.</p>
+		<p>Not working? Make sure your <a href="alt1://showsettings/capture">capture settings</a> are working. In addition, this tool may sometimes have trouble locating the dialogue box if the Player or the NPC has a tall hat or other headgear that extends to the top of the dialogue box.</p>
+	</div>
+	<input type="text" name="playername" value="Player Name" id="playername" title="Enter your Player name here to replace it with 'Player' in the transcript">
+	<input type="number" value="1" min="0" max="20" id="custom-indent" disabled>
 	<input type="checkbox" id="use-custom-indent">
+	<label for="use-custom-indent">Use custom indent</label>
 	<table>
 	  <tr>
-		<td class="nisbutton" id="start-stop">Start</td>
-		<td class="nisbutton" id="clear">Clear</td>
-		<td class="nisbutton" id="export">Export</td>
+		<td class="nisbutton" id="start-stop" title="Start transcribing">Start</td>
+		<td class="nisbutton" id="clear" title="Stop transcribing">Clear</td>
+		<td class="nisbutton" id="export" title="Export the dialogue that has been transcribed">Export</td>
 	  </tr>
 	</table>
-	Auto-export dialogue <input type="checkbox" id="auto-export">
+	<label for="auto-export">Auto-export dialogue</label> 
+	<input type="checkbox" id="auto-export" checked>
 	<div id="output"></div>
 	<div id="options"></div>
   </body>

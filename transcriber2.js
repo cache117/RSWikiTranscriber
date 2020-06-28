@@ -20,14 +20,16 @@ onPageReady(function () {
 
 var interval = null;
 function startTranscribe() {
-	var startButton = document.getElementById("start-stop");
+	let welcomeText = document.getElementById("welcome");
+	welcomeText.style.display = "none";
+	let startButton = document.getElementById("start-stop");
 	startButton.onclick = stopTranscribe;
 	startButton.innerText = "Stop";
 	interval = setInterval(spacebar, 400);
 }
 
 function stopTranscribe() {
-	var stopButton = document.getElementById("start-stop");
+	let stopButton = document.getElementById("start-stop");
 	stopButton.onclick = startTranscribe;
 	stopButton.innerText = "Start";
 	clearInterval(interval);
@@ -65,20 +67,19 @@ function clear() {
 * Write it to a dedicated output area.
 */
 function exportTree() {
-	var initialIndent = 1;
+	let initialIndent = 1;
 	if (document.getElementById("use-custom-indent").checked) {
 		initialIndent = parseInt(document.getElementById("custom-indent").value, 10);
 	}
-
 	
 	document.getElementById("output").innerText = stringify(dialogueTree, initialIndent, null);
 	return;
 	
-	var itemsToParse = [dialogueTree];
+	/*var itemsToParse = [dialogueTree];
 
 	while (itemsToParse.length) {
 		var next = itemsToParse[0];
-	}
+	}*/
 	
 }
 
@@ -89,14 +90,35 @@ function exportTree() {
 * These buttons delegate to the select() function.
 */
 function spacebar() {
-	var image = a1lib.bindfullrs();
-	var foundBox = reader.find(image);
+	let image = null;
+	let any = false;
+	let readSome = function() {
+		if (!any && reader.pos) { any = readDialogue(); }
+	}
+	
+	readSome();
+	if (!any) {
+		if (!reader.pos) {
+			image = image || a1lib.bindfullrs();
+			reader.find(image);
+		}
+		readSome();
+	}
+	
+	
+	
+	/*let image = a1lib.bindfullrs();
+	let foundBox = reader.find(image);
+	console.log(foundBox);
+	if (!foundBox) return;*/
 
-	if (!foundBox) return;
 
-	var read = reader.read(image);
-	if (!read) return;
-	if (!isNewRead(read)) return;
+}
+
+function readDialogue() {
+	let read = reader.read();
+	if (!read) return false;
+	if (!isNewRead(read)) return true;
 	lastRead = read;
 	
 	if (isOpts(read)) {
@@ -105,12 +127,13 @@ function spacebar() {
 		
 	}
 
-	var continuingFromOld = false;
-	var equalNode;
+	let continuingFromOld = false;
+	let equalNode;
 	if (currentChild) {
 		if (areTheSame(currentChild, read)) {
 			// Keep things in sync after restarts.
-			return;
+			return true;
+			//return;
 		}
 		if (currentChild.next) {
 			// We've been here before
@@ -120,7 +143,8 @@ function spacebar() {
 				if (document.getElementById("auto-export").checked) {
 					exportTree();
 				}
-				return;
+				return true;
+				//return;
 			} else {
 				// We're probably dealing with random/conditional dialogue
 				// TODO: Deal with that in a reasonable manner
@@ -159,6 +183,7 @@ function spacebar() {
 	if (document.getElementById("auto-export").checked) {
 		exportTree();
 	}
+	return true;
 }
 
 /**
@@ -173,12 +198,12 @@ function select(index) {
 			select(index);
 		}, 400);
 	}
-	var image = a1lib.bindfullrs();
-	var foundBox = reader.find(image);
+	let image = a1lib.bindfullrs();
+	let foundBox = reader.find(image);
 
 	if (!foundBox) return;
 
-	var read = reader.read(image);
+	let read = reader.read(image);
 	if (!read) return;	
 	if (!isNewRead(read)) return;
 	lastRead = read;
@@ -191,7 +216,7 @@ function select(index) {
 	}
 	read.parents = [currentChild];
 
-	var equalNode = findEqualNode(read);
+	let equalNode = findEqualNode(read);
 	if (currentChild.opts[index].next) {
 		// We've been here before
 		if (areTheSame(read, currentChild.opts[index].next)) {
@@ -241,7 +266,7 @@ function isNewRead(read) {
 	if (lastRead.text && read.text) {
 		// ...the read is new iff the texts are different
 		if (lastRead.text.length != read.text.length) return true;
-		for (var i = 0; i < read.text.length; ++i) {
+		for (let i = 0; i < read.text.length; ++i) {
 			if (lastRead.text[i] != read.text[i]) return true;
 		}
 		return false;
@@ -249,7 +274,7 @@ function isNewRead(read) {
 
 	// If we get here, neither has text. Thus both are options.
 	if (read.opts.length != lastRead.opts.length) return true;
-	for (var i = 0; i < read.opts.length; ++i) {
+	for (let i = 0; i < read.opts.length; ++i) {
 		if (lastRead.opts[i].str != read.opts[i].str) return true;
 	}
 	return false;
@@ -266,17 +291,17 @@ function isNewRead(read) {
 */
 function setupOpts(opts) {
 	// Set up buttons
-	var optButtonField = document.getElementById("options");
-	var optButtons = optButtonField.getElementsByClassName("select-button");
-	for (var i = optButtons.length - 1; i >= 0; --i) {
+	let optButtonField = document.getElementById("options");
+	let optButtons = optButtonField.getElementsByClassName("select-button");
+	for (let i = optButtons.length - 1; i >= 0; --i) {
 		optButtonField.removeChild(optButtons[i]);
 	}
 	if (window.alt1.permissionsOverlay) {
 		window.alt1.overLayClearGroup("RSWT");
 	}
 	if (!opts) return;
-	for (var i = 0; i < opts.length; ++i) {
-		var button = document.createElement("DIV");
+	for (let i = 0; i < opts.length; ++i) {
+		let button = document.createElement("DIV");
 		button.classList.add("nisbutton");
 		button.classList.add("select-button");
 		button.onclick = makeOptButtonCallback(i);
@@ -287,8 +312,8 @@ function setupOpts(opts) {
 	// Set up overlays
 	if (window.alt1.permissionOverlay) {
 		window.alt1.overLaySetGroup("RSWT");
-		for (var i = 0; i < opts.length; ++i) {
-			var color;
+		for (let i = 0; i < opts.length; ++i) {
+			let color;
 			if (opts[i].next) {
 				color = a1lib.mixcolor(0, 255, 0);
 			} else {
@@ -340,44 +365,45 @@ function isMessage(read) {
 }
 
 
-/**
-* Turns a dialogue tree into a string.
-*/
 var anchorsVisited;
 /**
 * Turns a dialogue tree into a string.
 */
 function stringify(dialogue, indentLevel=1, parent) {
-	var autoGenCat = "[[Category:Autogenerated dialogue that needs checking]]";
-	if (dialogue == null) return ""; // Is this sensible or do we want {{transcript missing}}?
-	var playerName = new RegExp(playerInputField.value, "gi");
+	const autoGenCat = "[[Category:Autogenerated dialogue that needs checking]]";
+	//if (dialogue == null) return ""; // Is this sensible or do we want {{transcript missing}}?
+	if (dialogue == null) return "{{Transcript missing}}"; // Is this sensible or do we want {{transcript missing}}?
+	
+	const playerName = new RegExp(playerInputField.value, "gi");
 	if (!parent) anchorsVisited = {};
 
 	if (dialogue.anchor) {
 		if (anchorsVisited[dialogue.anchor]) {
-			return "\n" + "*".repeat(indentLevel) + " ''(continues at [[#" + dialogue.anchor + "]])''" + autoGenCat;
+			return "\n" + "*".repeat(indentLevel) + " {{Tact|continue|" + dialogue.anchor + "}}" + autoGenCat;
 		} else {
 			anchorsVisited[dialogue.anchor] = true;
 		}
 	}
 
-	var retVal = "";
+	let retVal = "";
+	//The dialogue is a list of options, with a title
 	if (isOpts(dialogue)) {
 		retVal = "\n";
 		retVal += "*".repeat(indentLevel);
 		retVal += " ";
+		//Assume first letter capitalized only
 		retVal += dialogue.title[0].toUpperCase() + dialogue.title.slice(1).toLowerCase();
-		
+
 		if (dialogue.anchor) {
-			retVal += "<sup><span id=\"" + dialogue.anchor + "\"></span>" + autoGenCat + dialogue.anchor + "</span></sup>";
+			// retVal += "<sup><span id=\"" + dialogue.anchor + "\"></span>" + autoGenCat + dialogue.anchor + "</span></sup>";
+			retVal += " {{Anchor|" + dialogue.anchor + "}}" + autoGenCat;
 		}
 
-		for (var i = 0; i < dialogue.opts.length; ++i) {
+		for (let i = 0; i < dialogue.opts.length; ++i) {
 			retVal += "\n";
 			retVal += "*".repeat(indentLevel + 1);
+			retVal += " ";
 			retVal += dialogue.opts[i].str.replace(playerName, "Player");
-
-
 
 			if (dialogue.opts[i].next) {
 				retVal += stringify(dialogue.opts[i].next, indentLevel + 2, dialogue);
@@ -386,13 +412,17 @@ function stringify(dialogue, indentLevel=1, parent) {
 			}
 			
 		}
+	//The dialogue has a speaker
 	} else if (isSpeech(dialogue)) {
+		//Is this a continuation of previous dialogue?
 		if (parent
 			&& !dialogue.anchor
 			&& isSpeech(parent)
 			&& parent.title == dialogue.title) {
 			retVal =  " " + dialogue.text.join(" ").replace(playerName, "Player");
+		//Brand new dialogue
 		} else {
+			//Format for Wiki is * '''NPC:''' Text
 			retVal = "\n"
 				+ "*".repeat(indentLevel)
 				+ " '''"
@@ -401,10 +431,13 @@ function stringify(dialogue, indentLevel=1, parent) {
 				+ dialogue.text.join(" ").replace(playerName, "Player");
 		}
 		if (dialogue.anchor) {
-			retVal += "<sup><span id=\"" + dialogue.anchor + "\"></span>" + autoGenCat + dialogue.anchor + "</span></sup>";
+			//retVal += "<sup><span id=\"" + dialogue.anchor + "\"></span>" + autoGenCat + dialogue.anchor + "</span></sup>";
+			retVal += "{{Anchor|" + dialogue.anchor + "}}";
 		}
 		
+		//Continue stringifying the next dialogue until all dialogue is added.
 		if (dialogue.next) retVal += stringify(dialogue.next, indentLevel, dialogue);
+	//The dialogue doesn't have a speaker.
 	} else if (isMessage(dialogue)) {
 		if (parent
 			&& !dialogue.anchor
@@ -414,7 +447,8 @@ function stringify(dialogue, indentLevel=1, parent) {
 			retVal = "\n" + "*".repeat(indentLevel) + " " + dialogue.text.join(" ").replace(playerName, "Player");
 		}
 		if (dialogue.anchor) {
-			retVal += "<sup><span id=\"" + dialogue.anchor + "\"></span>" + autoGenCat + dialogue.anchor + "</span></sup>";
+			//retVal += "<sup><span id=\"" + dialogue.anchor + "\"></span>" + autoGenCat + dialogue.anchor + "</span></sup>";
+			retVal += "{{Anchor|" + dialogue.anchor + "}}";
 		}
 		
 		if (dialogue.next) retVal += stringify(dialogue.next, indentLevel, dialogue);
@@ -435,7 +469,9 @@ function titleOrPlayerName(ttl) {
 	if (ttl.toUpperCase() == playerInputField.value.toUpperCase()) {
 		return "Player";
 	} else {
-		return ttl[0].toUpperCase() + ttl.slice(1).toLowerCase();
+		//return ttl[0].toUpperCase() + ttl.slice(1).toLowerCase();
+		//Capitalize each word in a name, as that's on average more accurate.
+		return ttl.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 	}
 }
 
@@ -467,7 +503,7 @@ function areTheSame(box1, box2) {
 		if (box1.opts.length != box2.opts.length) {
 			return false;
 		}
-		for (var i = 0; i < box1.opts.length; ++i) {
+		for (let i = 0; i < box1.opts.length; ++i) {
 			if (box1.opts[i].str != box2.opts[i].str) {
 				return false;
 			}
@@ -489,12 +525,12 @@ function areTheSame(box1, box2) {
 * Does nothing otherwise.
 */
 function eventSelect(evt) {
-	var read = reader.read(a1lib.bindfullrs());
+	let read = reader.read(a1lib.bindfullrs());
 
 	if (!read) return;
 	if (!isOpts(read)) return;
 	
-	for (var i = 0; i < read.opts.length; ++i) {
+	for (let i = 0; i < read.opts.length; ++i) {
 		if (read.opts[i].hover) {
 			select(i);
 			return;
@@ -506,10 +542,10 @@ function eventSelect(evt) {
 
 
 function findEqualNode(node, anchorsVisited={}) {
-	var q = new Queue();
+	let q = new Queue();
 	q.enqueue(dialogueTree);
 	while (!q.isEmpty()) {
-		var candidate = q.dequeue();
+		let candidate = q.dequeue();
 		if (candidate.anchor) {
 			if (anchorsVisited[candidate.anchor]) {
 				continue; // Looping forever is bad, let's not
@@ -521,7 +557,7 @@ function findEqualNode(node, anchorsVisited={}) {
 			return candidate;
 		}
 		if (isOpts(candidate)) {
-			for (var i = 0; i < candidate.opts.length; ++i) {
+			for (let i = 0; i < candidate.opts.length; ++i) {
 				q.enqueue(candidate.opts[i]);
 			}
 		} else if (candidate.next) {
