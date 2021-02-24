@@ -12,7 +12,7 @@ onPageReady(function () {
 	} else {
 		document.getElementById("output").innerText += "Could not detect Alt1";
 	}
-	if (!undefined) {
+	if (!uuid) {
 		document.getElementById("output").innerText += "Missing submodule: uuid\nUse the following git command to fix:\n";
 		document.getElementById("output").innerText += "git submodule update --init --recursive";
 	}
