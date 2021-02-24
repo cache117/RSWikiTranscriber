@@ -15,7 +15,7 @@ Once you have installed Alt1, follow these steps to add this app to it:
 # Using RSWikiTranscriber
 
 1. Launch RSWikiTranscriber from Alt1.
-1. Enter your name in the text area that says Player Name, if you want your name to be automatically replaced with the word Player. If you want this to persist across usages, you can also change the `value` in the `playername` field: `<input type="text" name="playername" value="Change this value" id="playername" title="Enter your Player name here to replace it with 'Player' in the transcript">`
+1. Enter your name in the text area that says Player Name, if you want your name to be automatically replaced with the word Player. This will be saved in local storage across usages of this app.
 1. Press Start
 1. Talk to an NPC
 1. When you're given dialogue options, make sure you click the corresponding button on the RSWikiTranscriber window. You can do this before *or* after clicking the option.

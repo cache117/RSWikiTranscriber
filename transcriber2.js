@@ -5,6 +5,7 @@ onPageReady(function () {
 		document.getElementById("export").onclick = exportTree;
 		a1lib.identifyUrl("appconfig.json");
 		playerInputField = document.getElementById("playername");
+		playerInputField.value = getSavedPlayerName();
 		document.getElementById("use-custom-indent").addEventListener("change", function(evt) {
 			document.getElementById("custom-indent").disabled = !evt.target.checked;
 		});
@@ -364,7 +365,6 @@ function isMessage(read) {
 	return (read.text && !read.title && !read.opts) ? true : false;
 }
 
-
 var anchorsVisited;
 /**
 * Turns a dialogue tree into a string.
@@ -563,5 +563,30 @@ function findEqualNode(node, anchorsVisited={}) {
 		} else if (candidate.next) {
 			q.enqueue(candidate.next);
 		}
+	}
+}
+
+function getSavedPlayerName() {
+	if (typeof Storage !== "undefined") { // We have local storage support
+		var playerName = localStorage.playerName
+		console.log("Retrieving: " + playerName);
+		if (playerName) {
+			console.log("Returning saved player name");
+			return playerName; // to fetch from local storage
+		} else {
+			console.log("Returning default name (unset)");
+			return "Player";
+		}
+	}
+	console.log("Returning default name (no local storage)");
+	return "Player";
+}
+
+function savePlayerName() {
+	if (typeof Storage !== "undefined") { // We have local storage support
+		console.log("Storing player name as " + playerInputField.value);
+		localStorage.playerName = playerInputField.value;
+	} else {
+		console.log("Unable to save player name in local storage");
 	}
 }
