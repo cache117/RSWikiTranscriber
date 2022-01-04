@@ -6,8 +6,18 @@ This app must be run through Alt1. It will refuse to work if it isn't. Alt1 can 
 
 Once you have installed Alt1, follow these steps to add this app to it:
 
+To use the Wiki's hosted version:
+
+1. Open [this link](https://chisel.weirdgloop.org/gazproj/alt1/transcribe/transcriber2.html)
+1. Click the link to open the app in Alt1
+  1. Alternatively, copy `https://chisel.weirdgloop.org/gazproj/alt1/transcribe/transcriber2.html` and paste it into the Alt1 browser (by opening the Alt1 Toolkit menu, then clicking Browser)
+1. Click the Add App button in the upper-right corner
+
+If you wish to host the app locally yourself:
+
 1. Clone or download this repository.
-1. If you downloaded it as a zip file, extract the files somewhere you'll remember.
+  1. If you downloaded it as a zip file, extract the files somewhere you'll remember.
+  1. If cloned, you may need to run `git submodule update --init --recursive`
 1. Open Alt1, and open the Alt1 browser (by opening the Alt1 Toolkit menu, then clicking Browser)
 1. Paste the local file path to the transcriber2.html file into the browser's address bar
 1. Click the Add App button in the upper right corner.
