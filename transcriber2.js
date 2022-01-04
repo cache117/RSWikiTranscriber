@@ -11,7 +11,12 @@ onPageReady(function () {
 		});
 		window.alt1.events.alt1pressed.push(eventSelect);
 	} else {
-		document.getElementById("output").innerText += "Could not detect Alt1";
+		var a = document.createElement('a');
+		var u = new URL(window.location.href);
+		u.pathname = u.pathname.replace(/\/transcriber2.html$/, '/appconfig.json');
+		a.href = 'alt1://addapp/'+u.toString();
+		a.innerHTML = 'Could not detect Alt1<br>Click here to open in alt1'
+		document.getElementById("output").appendChild(a);
 	}
 	if (!uuid) {
 		document.getElementById("output").innerText += "Missing submodule: uuid\nUse the following git command to fix:\n";
