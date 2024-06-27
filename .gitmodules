@@ -1,3 +1,0 @@
-[submodule "uuid-random"]
-	path = uuid-random
-	url = https://github.com/jchook/uuid-random.git
