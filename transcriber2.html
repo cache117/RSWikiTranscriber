@@ -32,11 +32,14 @@
 	  #welcome {
 		margin-top: 1em;
 	  }
-	  #welcome a {
+	  #welcome a{
 		color: #888;
 	  }
 	  #custom-indent {
 		width: 3em;
+	  }
+	  #output a {
+		color: yellow;
 	  }
 	</style>
   </head>
@@ -49,6 +52,10 @@
 	<input type="number" value="1" min="0" max="20" id="custom-indent" disabled>
 	<input type="checkbox" id="use-custom-indent">
 	<label for="use-custom-indent">Use custom indent</label>
+	<!--Begin Cache S. Issue-9 12/05/2023 -- Add ability to repeat the speaker's name for each dialogue box-->
+	<input type="checkbox" id="repeat-speaker" title="If this is checked, then instead of appending dialogue each time a new dialogue box appears, it will add it as if it was a new piece of dialogue">
+	<label for="repeat-speaker">Repeat speaker</label>
+	<!--End Cache S. Issue-9-->
 	<table>
 	  <tr>
 		<td class="nisbutton" id="start-stop" title="Start transcribing">Start</td>
