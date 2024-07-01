@@ -6,7 +6,7 @@ This app must be run through Alt1. It will refuse to work if it isn't. Alt1 can 
 
 Once you have installed Alt1, follow these steps to add this app to it:
 
-To use the Wiki's hosted version:
+To use the Wiki's hosted version (Note: Because of some yet-unresolved cloudflare issues, you may not be able to add the app from this location and will need to host it locally):
 
 1. Open [this link](https://chisel.weirdgloop.org/gazproj/alt1/transcribe/index.html)
 2. Click the link to open the app in Alt1
